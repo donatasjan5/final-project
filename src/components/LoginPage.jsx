@@ -33,6 +33,7 @@ const LoginPage = () => {
 
   return (
     <Container>
+      <h1 style={{ marginBottom: "15px", fontSize: "20px" }}>Login</h1>
       {isLoggedIn ? (
         <div>
           <p>You are logged in.</p>
