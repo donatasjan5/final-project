@@ -10,34 +10,37 @@ const Container = styled.div`
 
 const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    // Patikrinkite prisijungimo duomenis ir nustatykite isLoggedIn būseną
     if (email === "donatasjan5@gmail.com" && password === "password") {
       setIsLoggedIn(true);
+      setIsLoginFailed(false); // Nustato, kad prisijungimas pavyko
       navigate("/");
     } else {
       setIsLoggedIn(false);
+      setIsLoginFailed(true); // Nustato, kad prisijungimas nepavyko
     }
   };
 
   const handleLogout = () => {
-    // Atsijungimo veiksmai
     setIsLoggedIn(false);
+    setIsLoginFailed(false); // Nustato, kad prisijungimo klaida nebepasirodo po atsijungimo
   };
 
   return (
     <Container>
       {isLoggedIn ? (
         <div>
-          <p>Jūs esate prisijungęs.</p>
-          <button onClick={handleLogout}>Atsijungti</button>
+          <p>You are logged in.</p>
+          <button onClick={handleLogout}>Log Out</button>
         </div>
       ) : (
         <div>
+          {isLoginFailed && <p>You entered wrong email or password. </p>}
           <Input
             placeholder={"email"}
             type="email"
