@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Input from './Input';
-import BlueButton from './BlueButton';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Input from "./Input";
+import BlueButton from "./BlueButton";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 30px 20px;
@@ -9,13 +10,15 @@ const Container = styled.div`
 
 const LoginPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     // Patikrinkite prisijungimo duomenis ir nustatykite isLoggedIn būseną
-    if (email === 'donatasjan5@gmail.com' && password === 'password') {
+    if (email === "donatasjan5@gmail.com" && password === "password") {
       setIsLoggedIn(true);
+      navigate("/");
     } else {
       setIsLoggedIn(false);
     }
@@ -36,13 +39,13 @@ const LoginPage = () => {
       ) : (
         <div>
           <Input
-            placeholder={'email'}
+            placeholder={"email"}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <Input
-            placeholder={'password'}
+            placeholder={"password"}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
