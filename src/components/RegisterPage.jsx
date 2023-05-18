@@ -8,7 +8,7 @@ const Container = styled.div`
   padding: 30px 20px;
 `;
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoginFailed, setIsLoginFailed] = useState(false);
   const [email, setEmail] = useState("");
@@ -19,17 +19,17 @@ const LoginPage = () => {
   const handleRegister = () => {
     if (email.includes("@") && password === passwordConfirmation) {
       setIsLoggedIn(true);
-      setIsLoginFailed(false); // Nustato, kad registracija pavyko
-      navigate("/");
+      setIsLoginFailed(false);
+      navigate("/login"); // Nukreipia į prisijungimo puslapį (LoginPage)
     } else {
       setIsLoggedIn(false);
-      setIsLoginFailed(true); // Nustato, kad registracija nepavyko
+      setIsLoginFailed(true);
     }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setIsLoginFailed(false); // Nustato, kad prisijungimo klaida nebepasirodo po atsijungimo
+    setIsLoginFailed(false);
   };
 
   return (
@@ -68,4 +68,5 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
+

@@ -41,3 +41,13 @@ function App() {
 }
 
 export default App;
+
+
+            {/* 
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="/" element={<QuestionsPage />} />
+            </Route>
+            <Route path="/ask" element={<PrivateRoute />}>
+              <Route path="/ask" element={<AskPage />} />
+            </Route> */}
+
