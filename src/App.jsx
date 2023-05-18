@@ -3,7 +3,12 @@ import { Reset } from "styled-reset";
 import { createGlobalStyle } from "styled-components";
 import Header from "./components/Header";
 import QuestionsPage from "./components/QuestionsPage";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import AskPage from "./components/AskPage";
 import UserContext from "./components/UserContext";
 import LoginPage from "./components/LoginPage";
@@ -42,12 +47,12 @@ function App() {
 
 export default App;
 
-
-            {/* 
+{
+  /* 
             <Route path="/" element={<PrivateRoute />}>
               <Route path="/" element={<QuestionsPage />} />
             </Route>
             <Route path="/ask" element={<PrivateRoute />}>
               <Route path="/ask" element={<AskPage />} />
-            </Route> */}
-
+            </Route> */
+}
