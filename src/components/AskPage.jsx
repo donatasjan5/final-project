@@ -41,14 +41,25 @@ const EditButton = styled.button`
   cursor: pointer;
 `;
 
+const DeleteButton = styled.button`
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+`;
+
 const QuestionTitle = styled.h3`
   padding-bottom: 10px;
-`
+`;
 
 const QuestionWord = styled.h2`
   margin: 15px 0;
   font-size: 20px;
-`
+`;
 
 export default function AskPage() {
   const [questionTitle, setQuestionTitle] = useState("");
@@ -71,6 +82,12 @@ export default function AskPage() {
     setQuestionTitle(editedQuestion.title);
     setQuestionBody(editedQuestion.body);
 
+    const updatedQuestions = [...questions];
+    updatedQuestions.splice(index, 1);
+    setQuestions(updatedQuestions);
+  };
+
+  const deleteQuestion = (index) => {
     const updatedQuestions = [...questions];
     updatedQuestions.splice(index, 1);
     setQuestions(updatedQuestions);
@@ -100,6 +117,9 @@ export default function AskPage() {
               <QuestionTitle>{q.title}</QuestionTitle>
               <p>{q.body}</p>
               <EditButton onClick={() => editQuestion(index)}>Edit</EditButton>
+              <DeleteButton onClick={() => deleteQuestion(index)}>
+                Delete
+              </DeleteButton>
             </QuestionContainer>
           ))}
         </div>
@@ -107,5 +127,4 @@ export default function AskPage() {
     </Container>
   );
 }
-
 
