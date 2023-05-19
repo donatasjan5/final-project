@@ -16,11 +16,37 @@ const RegisterPage = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (email.includes("@") && password === passwordConfirmation) {
       setIsLoggedIn(true);
       setIsLoginFailed(false);
-      navigate("/login"); // Nukreipia į prisijungimo puslapį (LoginPage)
+
+      const registrationData = {
+        email,
+        password,
+        passwordConfirmation,
+      };
+
+      console.log(registrationData);
+
+      try {
+        const response = await fetch("http://localhost:8000/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registrationData),
+        });
+
+        if (response.ok) {
+          console.log("Registered successfully");
+          navigate("/login");
+        } else {
+          throw new Error("Registration failed");
+        }
+      } catch (error) {
+        console.error("Failed:", error.message);
+      }
     } else {
       setIsLoggedIn(false);
       setIsLoginFailed(true);
@@ -69,4 +95,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

@@ -1,0 +1,16 @@
+{
+  "user": [
+    {
+      "email": "@",
+      "password": "wwe",
+      "passwordConfirmation": "wwe",
+      "id": 1
+    },
+    {
+      "email": "@@@",
+      "password": "asas",
+      "passwordConfirmation": "asas",
+      "id": 2
+    }
+  ]
+}
