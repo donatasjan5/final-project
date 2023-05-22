@@ -72,6 +72,8 @@ export default function AskPage() {
     const newQuestion = {
       title: questionTitle,
       body: questionBody,
+      likes: 0, // added likes field
+      dislikes: 0, // added dislikes field
       comments: [],
     };
 
@@ -95,19 +97,23 @@ export default function AskPage() {
 
   const addItemComment = (questionIndex) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].comments.push(comment);
+    updatedQuestions[questionIndex].comments.push({
+      body: comment,
+      likes: 0, // added likes field for comments
+      dislikes: 0, // added dislikes field for comments
+    });
     setQuestions(updatedQuestions);
     setComment("");
   };
 
   const editComment = (questionIndex, commentIndex) => {
-    setEditedIndex(questionIndex + "_" + commentIndex);
-    setEditedComment(questions[questionIndex].comments[commentIndex]);
+    setEditedIndex(`${questionIndex}_${commentIndex}`);
+    setEditedComment(questions[questionIndex].comments[commentIndex].body);
   };
 
   const saveEditedComment = (questionIndex, commentIndex) => {
     const updatedQuestions = [...questions];
-    updatedQuestions[questionIndex].comments[commentIndex] = editedComment;
+    updatedQuestions[questionIndex].comments[commentIndex].body = editedComment;
     setQuestions(updatedQuestions);
     setEditedIndex(null);
     setEditedComment("");
@@ -121,6 +127,30 @@ export default function AskPage() {
   const deleteComment = (questionIndex, commentIndex) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].comments.splice(commentIndex, 1);
+    setQuestions(updatedQuestions);
+  };
+
+  const likeQuestion = (questionIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].likes += 1;
+    setQuestions(updatedQuestions);
+  };
+
+  const dislikeQuestion = (questionIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].dislikes += 1;
+    setQuestions(updatedQuestions);
+  };
+
+  const likeComment = (questionIndex, commentIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].comments[commentIndex].likes += 1;
+    setQuestions(updatedQuestions);
+  };
+
+  const dislikeComment = (questionIndex, commentIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].comments[commentIndex].dislikes += 1;
     setQuestions(updatedQuestions);
   };
 
@@ -150,10 +180,19 @@ export default function AskPage() {
                 {editedIndex === questionIndex && " (edited)"}
               </h3>
               <p>{q.body}</p>
+              <ActionButton onClick={() => likeQuestion(questionIndex)}>
+                Like ({q.likes})
+              </ActionButton>
+              <ActionButton onClick={() => dislikeQuestion(questionIndex)}>
+                Dislike ({q.dislikes})
+              </ActionButton>
               <ActionButton onClick={() => editItem(questionIndex)}>
                 Edit
               </ActionButton>
-              <ActionButton delete onClick={() => deleteItem(questionIndex)}>
+              <ActionButton
+                delete
+                onClick={() => deleteItem(questionIndex)}
+              >
                 Delete
               </ActionButton>
               <CommentInput
@@ -173,7 +212,7 @@ export default function AskPage() {
                   <h4>Comments:</h4>
                   {q.comments.map((comment, commentIndex) => (
                     <CommentContainer key={commentIndex}>
-                      {editedIndex === questionIndex + "_" + commentIndex ? (
+                      {editedIndex === `${questionIndex}_${commentIndex}` ? (
                         <>
                           <CommentInput
                             type="text"
@@ -194,7 +233,21 @@ export default function AskPage() {
                         </>
                       ) : (
                         <>
-                          <p>{comment}</p>
+                          <p>{comment.body}</p>
+                          <ActionButton
+                            onClick={() =>
+                              likeComment(questionIndex, commentIndex)
+                            }
+                          >
+                            Like ({comment.likes})
+                          </ActionButton>
+                          <ActionButton
+                            onClick={() =>
+                              dislikeComment(questionIndex, commentIndex)
+                            }
+                          >
+                            Dislike ({comment.dislikes})
+                          </ActionButton>
                           <ActionButton
                             onClick={() =>
                               editComment(questionIndex, commentIndex)

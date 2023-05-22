@@ -27,9 +27,6 @@ const QuestionsPage = () => {
 
 export default QuestionsPage;
 
-
-
-
 // import React, { useEffect, useState } from "react";
 // import styled from "styled-components";
 // import Header1 from "./Header1";
@@ -85,3 +82,4 @@ export default QuestionsPage;
 // };
 
 // export default QuestionsPage;
+
