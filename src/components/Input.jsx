@@ -9,6 +9,7 @@ const Input = styled.input`
   box-sizing: border-box;
   padding: 10px;
   margin-bottom: 15px;
+  color: white;
 `;
 
-export default Input
+export default Input;

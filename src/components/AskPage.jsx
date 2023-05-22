@@ -67,13 +67,15 @@ export default function AskPage() {
   const [comment, setComment] = useState("");
   const [editedIndex, setEditedIndex] = useState(null);
   const [editedComment, setEditedComment] = useState("");
+  const [editedQuestionTitle, setEditedQuestionTitle] = useState("");
+  const [editedQuestionBody, setEditedQuestionBody] = useState("");
 
   const addQuestion = () => {
     const newQuestion = {
       title: questionTitle,
       body: questionBody,
-      likes: 0, // added likes field
-      dislikes: 0, // added dislikes field
+      likes: 0,
+      dislikes: 0,
       comments: [],
     };
 
@@ -85,8 +87,8 @@ export default function AskPage() {
   const editItem = (index) => {
     setEditedIndex(index);
     const editedQuestion = questions[index];
-    setQuestionTitle(editedQuestion.title);
-    setQuestionBody(editedQuestion.body);
+    setEditedQuestionTitle(editedQuestion.title);
+    setEditedQuestionBody(editedQuestion.body);
   };
 
   const deleteItem = (index) => {
@@ -99,8 +101,8 @@ export default function AskPage() {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].comments.push({
       body: comment,
-      likes: 0, // added likes field for comments
-      dislikes: 0, // added dislikes field for comments
+      likes: 0,
+      dislikes: 0,
     });
     setQuestions(updatedQuestions);
     setComment("");
@@ -154,6 +156,22 @@ export default function AskPage() {
     setQuestions(updatedQuestions);
   };
 
+  const saveEditedQuestion = (questionIndex) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].title = editedQuestionTitle;
+    updatedQuestions[questionIndex].body = editedQuestionBody;
+    setQuestions(updatedQuestions);
+    setEditedIndex(null);
+    setEditedQuestionTitle("");
+    setEditedQuestionBody("");
+  };
+
+  const cancelEditQuestion = () => {
+    setEditedIndex(null);
+    setEditedQuestionTitle("");
+    setEditedQuestionBody("");
+  };
+
   return (
     <Container>
       <Header1 style={{ marginBottom: "20px" }}>Ask a public question</Header1>
@@ -175,40 +193,45 @@ export default function AskPage() {
           <h2>Questions:</h2>
           {questions.map((q, questionIndex) => (
             <QuestionContainer key={questionIndex}>
-              <h3>
-                {q.title}
-                {editedIndex === questionIndex && " (edited)"}
-              </h3>
-              <p>{q.body}</p>
-              <ActionButton onClick={() => likeQuestion(questionIndex)}>
-                Like ({q.likes})
-              </ActionButton>
-              <ActionButton onClick={() => dislikeQuestion(questionIndex)}>
-                Dislike ({q.dislikes})
-              </ActionButton>
-              <ActionButton onClick={() => editItem(questionIndex)}>
-                Edit
-              </ActionButton>
-              <ActionButton
-                delete
-                onClick={() => deleteItem(questionIndex)}
-              >
-                Delete
-              </ActionButton>
-              <CommentInput
-                type="text"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Add a comment"
-              />
-              <BlueButton
-                onClick={() => addItemComment(questionIndex)}
-                disabled={!comment}
-              >
-                Add Comment
-              </BlueButton>
-              {q.comments.length > 0 && (
-                <div>
+              {editedIndex === questionIndex ? (
+                <>
+                  <Input
+                    type="text"
+                    value={editedQuestionTitle}
+                    onChange={(e) => setEditedQuestionTitle(e.target.value)}
+                    placeholder="Title of your question"
+                  />
+                  <QuestionBodyTextarea
+                    onChange={(e) => setEditedQuestionBody(e.target.value)}
+                    placeholder="More info about your question"
+                    value={editedQuestionBody}
+                  />
+                  <ActionButton onClick={() => saveEditedQuestion(questionIndex)}>
+                    Save
+                  </ActionButton>
+                  <ActionButton delete onClick={cancelEditQuestion}>
+                    Cancel
+                  </ActionButton>
+                </>
+              ) : (
+                <>
+                  <h3>
+                    {q.title}
+                    {editedIndex === questionIndex && " (edited)"}
+                  </h3>
+                  <p>{q.body}</p>
+                  <ActionButton onClick={() => likeQuestion(questionIndex)}>
+                    Like ({q.likes})
+                  </ActionButton>
+                  <ActionButton onClick={() => dislikeQuestion(questionIndex)}>
+                    Dislike ({q.dislikes})
+                  </ActionButton>
+                  <ActionButton onClick={() => editItem(questionIndex)}>
+                    Edit
+                  </ActionButton>
+                  <ActionButton delete onClick={() => deleteItem(questionIndex)}>
+                    Delete
+                  </ActionButton>
                   <h4>Comments:</h4>
                   {q.comments.map((comment, commentIndex) => (
                     <CommentContainer key={commentIndex}>
@@ -218,7 +241,6 @@ export default function AskPage() {
                             type="text"
                             value={editedComment}
                             onChange={(e) => setEditedComment(e.target.value)}
-                            placeholder="Edit the comment"
                           />
                           <ActionButton
                             onClick={() =>
@@ -235,9 +257,7 @@ export default function AskPage() {
                         <>
                           <p>{comment.body}</p>
                           <ActionButton
-                            onClick={() =>
-                              likeComment(questionIndex, commentIndex)
-                            }
+                            onClick={() => likeComment(questionIndex, commentIndex)}
                           >
                             Like ({comment.likes})
                           </ActionButton>
@@ -267,7 +287,16 @@ export default function AskPage() {
                       )}
                     </CommentContainer>
                   ))}
-                </div>
+                  <CommentInput
+                    type="text"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Add a comment"
+                  />
+                  <BlueButton onClick={() => addItemComment(questionIndex)}>
+                    Post comment
+                  </BlueButton>
+                </>
               )}
             </QuestionContainer>
           ))}
@@ -276,3 +305,4 @@ export default function AskPage() {
     </Container>
   );
 }
+
