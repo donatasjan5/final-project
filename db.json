@@ -17,6 +17,30 @@
       "password": "aa",
       "passwordConfirmation": "aa",
       "id": 3
+    },
+    {
+      "email": "donatasjan5@gmail.com",
+      "password": "labas",
+      "passwordConfirmation": "labas",
+      "id": 4
     }
-  ], "question": []
+  ],
+  "question": [
+    {
+      "title": "as",
+      "body": "asas",
+      "likes": 0,
+      "dislikes": 0,
+      "comments": [],
+      "id": 1
+    },
+    {
+      "title": "kls",
+      "body": "klausimas",
+      "likes": 0,
+      "dislikes": 0,
+      "comments": [],
+      "id": 2
+    }
+  ]
 }

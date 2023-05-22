@@ -82,6 +82,8 @@ export default function AskPage() {
     setQuestions([...questions, newQuestion]);
     setQuestionTitle("");
     setQuestionBody("");
+
+    saveQuestionToDb(newQuestion);
   };
 
   const editItem = (index) => {
@@ -89,6 +91,26 @@ export default function AskPage() {
     const editedQuestion = questions[index];
     setEditedQuestionTitle(editedQuestion.title);
     setEditedQuestionBody(editedQuestion.body);
+  };
+
+  const saveQuestionToDb = async (questionData) => {
+    try {
+      const response = await fetch("http://localhost:8000/question", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(questionData),
+      });
+  
+      if (response.ok) {
+        console.log("Question saved successfully");
+      } else {
+        throw new Error("Failed to save question");
+      }
+    } catch (error) {
+      console.error("Failed:", error.message);
+    }
   };
 
   const deleteItem = (index) => {
@@ -305,4 +327,3 @@ export default function AskPage() {
     </Container>
   );
 }
-
