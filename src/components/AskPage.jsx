@@ -70,6 +70,7 @@ export default function AskPage() {
   const [editedQuestionTitle, setEditedQuestionTitle] = useState("");
   const [editedQuestionBody, setEditedQuestionBody] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
+  const [filterByCommented, setFilterByCommented] = useState(false);
 
   const addQuestion = () => {
     const newQuestion = {
@@ -78,6 +79,7 @@ export default function AskPage() {
       likes: 0,
       dislikes: 0,
       comments: [],
+      commented: false,
     };
 
     setQuestions([...questions, newQuestion]);
@@ -103,7 +105,7 @@ export default function AskPage() {
         },
         body: JSON.stringify(questionData),
       });
-  
+
       if (response.ok) {
         console.log("Question saved successfully");
       } else {
@@ -127,6 +129,7 @@ export default function AskPage() {
       likes: 0,
       dislikes: 0,
     });
+    updatedQuestions[questionIndex].commented = true;
     setQuestions(updatedQuestions);
     setComment("");
   };
@@ -196,9 +199,16 @@ export default function AskPage() {
   };
 
   const filterQuestions = () => {
-    const filteredQuestions = questions.filter((question) =>
+    let filteredQuestions = questions.filter((question) =>
       question.title.toLowerCase().includes(filterKeyword.toLowerCase())
     );
+
+    if (filterByCommented) {
+      filteredQuestions = filteredQuestions.filter(
+        (question) => question.commented
+      );
+    }
+
     return filteredQuestions;
   };
 
@@ -216,129 +226,113 @@ export default function AskPage() {
         placeholder="More info about your question"
         value={questionBody}
       />
-      <BlueButton onClick={addQuestion}>Post question</BlueButton>
+      <BlueButton onClick={addQuestion}>Ask question</BlueButton>
 
-      <Input
-        type="text"
-        value={filterKeyword}
-        onChange={(e) => setFilterKeyword(e.target.value)}
-        placeholder="Filter questions by keyword"
-      />
+      <div>
+        <Input
+          type="text"
+          value={filterKeyword}
+          onChange={(e) => setFilterKeyword(e.target.value)}
+          placeholder="Filter by keyword"
+        />
+        <label htmlFor="commented">
+          <input
+            id="commented"
+            type="checkbox"
+            checked={filterByCommented}
+            onChange={(e) => setFilterByCommented(e.target.checked)}
+          />
+          Show commented questions
+        </label>
+      </div>
 
-      {filterQuestions().length > 0 && (
-        <div>
-          <h2>Questions:</h2>
-          {filterQuestions().map((q, questionIndex) => (
-            <QuestionContainer key={questionIndex}>
-              {editedIndex === questionIndex ? (
-                <>
-                  <Input
-                    type="text"
-                    value={editedQuestionTitle}
-                    onChange={(e) => setEditedQuestionTitle(e.target.value)}
-                    placeholder="Title of your question"
-                  />
-                  <QuestionBodyTextarea
-                    onChange={(e) => setEditedQuestionBody(e.target.value)}
-                    placeholder="More info about your question"
-                    value={editedQuestionBody}
-                  />
-                  <ActionButton onClick={() => saveEditedQuestion(questionIndex)}>
-                    Save
-                  </ActionButton>
-                  <ActionButton delete onClick={cancelEditQuestion}>
-                    Cancel
-                  </ActionButton>
-                </>
-              ) : (
-                <>
-                  <h3>
-                    {q.title}
-                    {editedIndex === questionIndex && " (edited)"}
-                  </h3>
-                  <p>{q.body}</p>
-                  <ActionButton onClick={() => likeQuestion(questionIndex)}>
-                    Like ({q.likes})
-                  </ActionButton>
-                  <ActionButton onClick={() => dislikeQuestion(questionIndex)}>
-                    Dislike ({q.dislikes})
-                  </ActionButton>
-                  <ActionButton onClick={() => editItem(questionIndex)}>
-                    Edit
-                  </ActionButton>
-                  <ActionButton delete onClick={() => deleteItem(questionIndex)}>
-                    Delete
-                  </ActionButton>
-                  <h4>Comments:</h4>
-                  {q.comments.map((comment, commentIndex) => (
-                    <CommentContainer key={commentIndex}>
-                      {editedIndex === `${questionIndex}_${commentIndex}` ? (
-                        <>
-                          <CommentInput
-                            type="text"
-                            value={editedComment}
-                            onChange={(e) => setEditedComment(e.target.value)}
-                          />
-                          <ActionButton
-                            onClick={() =>
-                              saveEditedComment(questionIndex, commentIndex)
-                            }
-                          >
-                            Save
-                          </ActionButton>
-                          <ActionButton delete onClick={cancelEditComment}>
-                            Cancel
-                          </ActionButton>
-                        </>
-                      ) : (
-                        <>
-                          <p>{comment.body}</p>
-                          <ActionButton
-                            onClick={() => likeComment(questionIndex, commentIndex)}
-                          >
-                            Like ({comment.likes})
-                          </ActionButton>
-                          <ActionButton
-                            onClick={() =>
-                              dislikeComment(questionIndex, commentIndex)
-                            }
-                          >
-                            Dislike ({comment.dislikes})
-                          </ActionButton>
-                          <ActionButton
-                            onClick={() =>
-                              editComment(questionIndex, commentIndex)
-                            }
-                          >
-                            Edit
-                          </ActionButton>
-                          <ActionButton
-                            delete
-                            onClick={() =>
-                              deleteComment(questionIndex, commentIndex)
-                            }
-                          >
-                            Delete
-                          </ActionButton>
-                        </>
-                      )}
-                    </CommentContainer>
-                  ))}
+      {filterQuestions().map((question, index) => (
+        <QuestionContainer key={index}>
+          <h3>{question.title}</h3>
+          <p>{question.body}</p>
+          <p>
+            Likes: {question.likes} | Dislikes: {question.dislikes}
+          </p>
+          <ActionButton onClick={() => deleteItem(index)} delete>
+            Delete
+          </ActionButton>
+          <ActionButton onClick={() => likeQuestion(index)}>
+            Like
+          </ActionButton>
+          <ActionButton onClick={() => dislikeQuestion(index)}>
+            Dislike
+          </ActionButton>
+          {editedIndex === index ? (
+            <div>
+              <Input
+                type="text"
+                value={editedQuestionTitle}
+                onChange={(e) => setEditedQuestionTitle(e.target.value)}
+                placeholder="Title of your question"
+              />
+              <QuestionBodyTextarea
+                onChange={(e) => setEditedQuestionBody(e.target.value)}
+                placeholder="More info about your question"
+                value={editedQuestionBody}
+              />
+              <BlueButton onClick={() => saveEditedQuestion(index)}>
+                Save
+              </BlueButton>
+              <BlueButton onClick={cancelEditQuestion}>Cancel</BlueButton>
+            </div>
+          ) : (
+            <ActionButton onClick={() => editItem(index)}>Edit</ActionButton>
+          )}
+
+          <CommentInput
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Add a comment"
+          />
+          <BlueButton onClick={() => addItemComment(index)}>
+            Add comment
+          </BlueButton>
+
+          {question.comments.map((comment, commentIndex) => (
+            <CommentContainer key={commentIndex}>
+              <p>{comment.body}</p>
+              <p>
+                Likes: {comment.likes} | Dislikes: {comment.dislikes}
+              </p>
+              <ActionButton onClick={() => deleteComment(index, commentIndex)} delete>
+                Delete
+              </ActionButton>
+              <ActionButton onClick={() => likeComment(index, commentIndex)}>
+                Like
+              </ActionButton>
+              <ActionButton onClick={() => dislikeComment(index, commentIndex)}>
+                Dislike
+              </ActionButton>
+              {editedIndex === `${index}_${commentIndex}` ? (
+                <div>
                   <CommentInput
                     type="text"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
+                    value={editedComment}
+                    onChange={(e) => setEditedComment(e.target.value)}
                     placeholder="Add a comment"
                   />
-                  <BlueButton onClick={() => addItemComment(questionIndex)}>
-                    Post comment
+                  <BlueButton
+                    onClick={() => saveEditedComment(index, commentIndex)}
+                  >
+                    Save
                   </BlueButton>
-                </>
+                  <BlueButton onClick={cancelEditComment}>Cancel</BlueButton>
+                </div>
+              ) : (
+                <ActionButton onClick={() => editComment(index, commentIndex)}>
+                  Edit
+                </ActionButton>
               )}
-            </QuestionContainer>
+            </CommentContainer>
           ))}
-        </div>
-      )}
+        </QuestionContainer>
+      ))}
     </Container>
   );
 }
