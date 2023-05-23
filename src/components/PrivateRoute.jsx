@@ -1,25 +1,18 @@
-// import React, { useContext } from "react";
-// import { Route, Navigate } from "react-router-dom";
-// import UserContext from "./UserContext";
+import React from "react";
+import { Route, Navigate } from "react-router-dom";
 
-// const PrivateRoute = ({ path, element }) => {
-//   const { user } = useContext(UserContext);
+const PrivateRoute = ({ component: Component, ...rest }) => {
 
-//   return user ? <Route path={path} element={element} /> : <Navigate to="/login" />;
-// };
+  const isLoggedIn = !!localStorage.getItem("user");
 
-// export default PrivateRoute;
+  return isLoggedIn ? (
+    <Route {...rest} render={(props) => <Component {...props} />} />
+  ) : (
+    <Navigate to="/login" replace />
+  );
+};
 
-// import React from 'react';
-// import { Navigate, Outlet } from 'react-router-dom';
+export default PrivateRoute;
 
-// const PrivateRoute = () => {
-//     const auth = true; // pavyzdinis kodas - jūsų logikoje turėtumėte nustatyti, ar vartotojas yra autorizuotas
 
-//     // Jei autorizuotas, grąžinkite vaikinių elementų rinkinį (Outlet) su QuestionsPage
-//     // Jei ne, peradresuokite vartotoją į prisijungimo puslapį
-//     return auth ? <Outlet /> : <Navigate to="/login" />;
-// }
-
-// export default PrivateRoute;
 

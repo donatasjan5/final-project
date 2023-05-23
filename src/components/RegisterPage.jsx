@@ -39,13 +39,12 @@ const RegisterPage = () => {
         });
 
         if (response.ok) {
-          console.log("Registered successfully");
           navigate("/login");
         } else {
-          throw new Error("Registration failed");
+          throw new Error();
         }
       } catch (error) {
-        console.error("Failed:", error.message);
+        console.error("Failed to register");
       }
     } else {
       setIsLoggedIn(false);

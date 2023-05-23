@@ -69,6 +69,7 @@ export default function AskPage() {
   const [editedComment, setEditedComment] = useState("");
   const [editedQuestionTitle, setEditedQuestionTitle] = useState("");
   const [editedQuestionBody, setEditedQuestionBody] = useState("");
+  const [filterKeyword, setFilterKeyword] = useState("");
 
   const addQuestion = () => {
     const newQuestion = {
@@ -194,6 +195,13 @@ export default function AskPage() {
     setEditedQuestionBody("");
   };
 
+  const filterQuestions = () => {
+    const filteredQuestions = questions.filter((question) =>
+      question.title.toLowerCase().includes(filterKeyword.toLowerCase())
+    );
+    return filteredQuestions;
+  };
+
   return (
     <Container>
       <Header1 style={{ marginBottom: "20px" }}>Ask a public question</Header1>
@@ -210,10 +218,17 @@ export default function AskPage() {
       />
       <BlueButton onClick={addQuestion}>Post question</BlueButton>
 
-      {questions.length > 0 && (
+      <Input
+        type="text"
+        value={filterKeyword}
+        onChange={(e) => setFilterKeyword(e.target.value)}
+        placeholder="Filter questions by keyword"
+      />
+
+      {filterQuestions().length > 0 && (
         <div>
           <h2>Questions:</h2>
-          {questions.map((q, questionIndex) => (
+          {filterQuestions().map((q, questionIndex) => (
             <QuestionContainer key={questionIndex}>
               {editedIndex === questionIndex ? (
                 <>
